@@ -6,16 +6,16 @@ public class Animal
 {
 	public int AnimalId { get; set; }
 	[Required]
-	[StringLength(35)]
+	[StringLength(30)]
 	public string Name { get; set; }
 	[Required]
-	[Range(0, 25, ErrorMessage = "Age must be an integer between 0 and 35")]
+	[Range(0, 40)]
 	public int Age { get; set; }
 	[Required]
-	[StringLength(25)]
+	[StringLength(30)]
 	public string Species { get; set; }
 	[Required]
-	[StringLength(25)]
+	[StringLength(30)]
 	public string Attitude { get; set; }
 	[Required]
 	public bool Adoptable { get; set; }
