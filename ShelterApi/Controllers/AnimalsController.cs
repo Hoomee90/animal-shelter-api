@@ -8,91 +8,103 @@ namespace ShelterApi.Controllers;
 [ApiController]
 public class AnimalsController : ControllerBase
 {
-  private readonly ShelterApiContext _db;
+	private readonly ShelterApiContext _db;
 
-  public AnimalsController(ShelterApiContext db)
-  {
-    _db = db;
-  }
+	public AnimalsController(ShelterApiContext db)
+	{
+		_db = db;
+	}
 
-  // GET api/animals
-  [HttpGet]
-  public async Task<ActionResult<IEnumerable<Animal>>> Get()
-  {
-    return await _db.Animals.ToListAsync();
-  }
+	// GET api/animals
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<Animal>>> Get(int reference, int pageSize)
+	{
+		if (reference >= 0 && pageSize > 0)
+		{
+			List<Animal> animals = await _db.Animals.AsNoTracking()
+			.OrderBy(animal => animal.AnimalId)
+			.Where(p => p.AnimalId > reference)
+			.Take(pageSize)
+			.ToListAsync();
+			return animals;
+		}
+		else
+		{
+			return await _db.Animals.ToListAsync();
+		}
+	}
 
-  // GET: api/Animals/5
-  [HttpGet("{id}")]
-  public async Task<ActionResult<Animal>> GetAnimal(int id)
-  {
-    Animal animal = await _db.Animals.FindAsync(id);
+	// GET: api/Animals/5
+	[HttpGet("{id}")]
+	public async Task<ActionResult<Animal>> GetAnimal(int id)
+	{
+		Animal animal = await _db.Animals.FindAsync(id);
 
-    if (animal == null)
-    {
-      return NotFound();
-    }
+		if (animal == null)
+		{
+			return NotFound();
+		}
 
-    return animal;
-  }
+		return animal;
+	}
 
-  // POST api/animals
-  [HttpPost]
-  public async Task<ActionResult<Animal>> Post(Animal animal)
-  {
-    _db.Animals.Add(animal);
-    await _db.SaveChangesAsync();
-    return CreatedAtAction(nameof(GetAnimal), new { id = animal.AnimalId }, animal);
-  }
+	// POST api/animals
+	[HttpPost]
+	public async Task<ActionResult<Animal>> Post(Animal animal)
+	{
+		_db.Animals.Add(animal);
+		await _db.SaveChangesAsync();
+		return CreatedAtAction(nameof(GetAnimal), new { id = animal.AnimalId }, animal);
+	}
 
-  private bool AnimalExists(int id)
-  {
-    return _db.Animals.Any(e => e.AnimalId == id);
-  }
+	private bool AnimalExists(int id)
+	{
+		return _db.Animals.Any(e => e.AnimalId == id);
+	}
 
-  // PUT: api/Animals/5
-  [HttpPut("{id}")]
-  public async Task<IActionResult> Put(int id, Animal animal)
-  {
-    if (id != animal.AnimalId)
-    {
-      return BadRequest();
-    }
+	// PUT: api/Animals/5
+	[HttpPut("{id}")]
+	public async Task<IActionResult> Put(int id, Animal animal)
+	{
+		if (id != animal.AnimalId)
+		{
+			return BadRequest();
+		}
 
-    _db.Animals.Update(animal);
+		_db.Animals.Update(animal);
 
-    try
-    {
-      await _db.SaveChangesAsync();
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-      if (!AnimalExists(id))
-      {
-        return NotFound();
-      }
-      else
-      {
-        throw;
-      }
-    }
+		try
+		{
+			await _db.SaveChangesAsync();
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			if (!AnimalExists(id))
+			{
+				return NotFound();
+			}
+			else
+			{
+				throw;
+			}
+		}
 
-    return NoContent();
-  }
+		return NoContent();
+	}
 
-  // DELETE: api/Animals/5
-  [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteAnimal(int id)
-  {
-    Animal animal = await _db.Animals.FindAsync(id);
-    if (animal == null)
-    {
-      return NotFound();
-    }
+	// DELETE: api/Animals/5
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeleteAnimal(int id)
+	{
+		Animal animal = await _db.Animals.FindAsync(id);
+		if (animal == null)
+		{
+			return NotFound();
+		}
 
-    _db.Animals.Remove(animal);
-    await _db.SaveChangesAsync();
+		_db.Animals.Remove(animal);
+		await _db.SaveChangesAsync();
 
-    return NoContent();
-  }
+		return NoContent();
+	}
 }
