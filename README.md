@@ -33,7 +33,7 @@ This api allows users to create and manage animals in a database. They can get, 
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Port=3306;database=cretaceous_api; uid=[YOUR-USERNAME];pwd=[YOUR-PASSWORD];"
+    "DefaultConnection": "Server=localhost;Port=3306;database=shelter_api; uid=[YOUR-USERNAME];pwd=[YOUR-PASSWORD];"
   }
 }
 ```
