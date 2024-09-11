@@ -19,19 +19,15 @@ public class AnimalsController : ControllerBase
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<Animal>>> Get(int reference, int pageSize)
 	{
-		if (reference >= 0 && pageSize > 0)
-		{
-			List<Animal> animals = await _db.Animals.AsNoTracking()
+		IQueryable<Animal> query = _db.Animals.AsQueryable()
 			.OrderBy(animal => animal.AnimalId)
-			.Where(p => p.AnimalId > reference)
-			.Take(pageSize)
-			.ToListAsync();
-			return animals;
-		}
-		else
+			.Where(p => p.AnimalId > reference);
+		if (pageSize != 0)
 		{
-			return await _db.Animals.ToListAsync();
+			query = query
+			.Take(pageSize);
 		}
+		return await query.ToListAsync();
 	}
 
 	// GET: api/Animals/5

@@ -68,6 +68,11 @@ DELETE  https://localhost:612/api/Animals/{id}
 | reference | Number  | Not required | returns only the animal entries with a higher Id than the reference input
 | pageSize    | Number | Not required | Returns only that number of animal entries
 
+The following query will return the animals with Ids higher than 7
+```
+GET  https://localhost:612/api/Animals?reference=7
+```
+
 The following query will return the animals with Ids 6 to 10
 ```
 GET  https://localhost:612/api/Animals?reference=5&pageSize=5
